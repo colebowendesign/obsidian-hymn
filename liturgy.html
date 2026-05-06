@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OBSIDIAN HYMN — LITURGY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg-0: #0a0a0a; --bg-1: #0f0f0f; --bg-2: #141414;
+    --line: #2a2a2a; --line-2: #3a3a3a;
+    --bone: #e8e4dd; --bone-dim: #a8a5a0; --bone-faint: #6a6864;
+    --blood: #8B0000; --blood-deep: #5a0a0a; --blood-bright: #B91C1C; --crimson: #FF2D2D;
+    --display: 'Cinzel','Times New Roman',serif;
+    --mono: 'JetBrains Mono',ui-monospace,monospace;
+    --sans: 'IBM Plex Sans',system-ui,sans-serif;
+  }
+  html, body { background: var(--bg-0); color: var(--bone); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+  body { overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+
+  /* film grain + scanlines */
+  body::before {
+    content:""; position: fixed; inset: 0; pointer-events: none; z-index: 9000;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: 0.06; mix-blend-mode: overlay; animation: gn 0.8s steps(4) infinite;
+  }
+  @keyframes gn {0%,100%{transform:translate(0,0)}25%{transform:translate(-2px,1px)}50%{transform:translate(1px,-2px)}75%{transform:translate(2px,2px)}}
+  body::after {
+    content:""; position: fixed; inset: 0; pointer-events: none; z-index: 8999;
+    background: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,0.18) 2px, rgba(0,0,0,0.18) 3px);
+    mix-blend-mode: multiply;
+  }
+
+  /* mono ticker on left edge */
+  .lt-rail {
+    position: fixed; left: 24px; top: 0; bottom: 0;
+    display: flex; align-items: center;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.4em; color: var(--bone-faint);
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    z-index: 50; text-transform: uppercase;
+  }
+  .lt-rail-r { left: auto; right: 24px; transform: rotate(0); writing-mode: vertical-rl; }
+
+  /* TOP NAV — minimal centered */
+  .lt-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    align-items: center; padding: 22px 64px;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95), rgba(10,10,10,0.4));
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .lt-nav-l { display: flex; gap: 28px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.24em; color: var(--bone-dim); text-transform: uppercase; }
+  .lt-nav-l a { transition: color .2s; }
+  .lt-nav-l a:hover { color: var(--blood-bright); }
+  .lt-mark { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 700; font-size: 16px; letter-spacing: 0.22em; }
+  .lt-mark .amp { color: var(--blood-bright); }
+  .lt-nav-r { display: flex; justify-content: flex-end; gap: 18px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.24em; color: var(--bone-dim); text-transform: uppercase; }
+  .lt-nav-r a:hover { color: var(--blood-bright); }
+  @media (max-width: 720px) { .lt-nav { padding: 16px 24px; grid-template-columns: auto 1fr auto; } .lt-nav-l { display:none; } .lt-rail { display:none; } }
+
+  /* ============ ACT I — VEIL ============ */
+  .lt-veil {
+    position: relative; min-height: 100vh; overflow: hidden;
+    display: grid; place-items: end center;
+    padding: 120px 64px 64px;
+  }
+  .lt-veil-img { position: absolute; inset: 0; }
+  .lt-veil-img img {
+    width: 100%; height: 100%; object-fit: cover; object-position: center top;
+    filter: contrast(1.1) brightness(0.55) saturate(0.7);
+    -webkit-mask-image: radial-gradient(ellipse 60% 75% at 50% 35%, #000 30%, rgba(0,0,0,0.5) 60%, transparent 90%);
+            mask-image: radial-gradient(ellipse 60% 75% at 50% 35%, #000 30%, rgba(0,0,0,0.5) 60%, transparent 90%);
+  }
+  .lt-veil-vignette {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 30% 40% at 50% 30%, rgba(91,10,10,0.35), transparent 60%),
+      linear-gradient(to bottom, rgba(10,10,10,0.6) 0%, transparent 30%, transparent 60%, var(--bg-0) 100%);
+  }
+  /* slow rotating ritual rings behind figure */
+  .lt-rings { position: absolute; left: 50%; top: 38%; transform: translate(-50%,-50%); width: min(900px, 80vmin); aspect-ratio: 1; opacity: 0.55; }
+  .lt-rings svg { width: 100%; height: 100%; }
+  .lt-rings .r1 { animation: rotCW 80s linear infinite; transform-origin: 50% 50%; }
+  .lt-rings .r2 { animation: rotCCW 50s linear infinite; transform-origin: 50% 50%; }
+  .lt-rings .r3 { animation: rotCW 24s linear infinite; transform-origin: 50% 50%; }
+  @keyframes rotCW { to{ transform: rotate(360deg) } }
+  @keyframes rotCCW { to{ transform: rotate(-360deg) } }
+
+  /* big wordmark ABOVE the figure as a banner */
+  .lt-act {
+    position: relative; z-index: 3;
+    display: flex; flex-direction: column; align-items: center; gap: 28px;
+    text-align: center;
+    padding-bottom: 72px;
+  }
+  .lt-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.42em; color: var(--bone-dim); text-transform: uppercase; display: inline-flex; gap: 14px; align-items: center; }
+  .lt-eyebrow::before, .lt-eyebrow::after { content:""; width: 36px; height: 1px; background: var(--bone-faint); }
+  .lt-act h1 {
+    font-family: var(--display); font-weight: 800;
+    font-size: clamp(64px, 12vw, 200px); line-height: 0.84; letter-spacing: -0.02em;
+    color: var(--blood-bright);
+    text-shadow: 0 0 1px rgba(0,0,0,0.9), 0 0 28px rgba(0,0,0,0.9), 0 0 70px rgba(139,0,0,0.5);
+  }
+  .lt-act h1 span { display: block; }
+  .lt-act h1 .l2 { font-style: italic; font-weight: 400; color: var(--blood); letter-spacing: 0.04em; font-size: 0.6em; }
+  .lt-act-sub {
+    font-family: var(--mono); font-size: 13px; line-height: 1.7; letter-spacing: 0.06em;
+    color: var(--bone-dim); max-width: 480px;
+  }
+  .lt-act-cta {
+    margin-top: 16px; display: inline-flex; align-items: center; gap: 14px;
+    padding: 16px 32px;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--bone);
+    background: var(--blood); border: 1px solid var(--blood-bright);
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    cursor: pointer; transition: background .25s, box-shadow .25s;
+  }
+  .lt-act-cta:hover { background: var(--blood-bright); box-shadow: 0 0 32px rgba(255,45,45,0.45); }
+
+  /* veil tickers */
+  .lt-tickline {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 4;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 64px;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.3em; color: var(--bone-faint); text-transform: uppercase;
+    background: rgba(10,10,10,0.6); backdrop-filter: blur(6px);
+  }
+  .lt-tickline .blink { display: inline-block; width: 6px; height: 6px; background: var(--blood-bright); margin-right: 8px; vertical-align: 1px; box-shadow: 0 0 8px var(--crimson); animation: bk 1.2s steps(2) infinite; }
+  @keyframes bk {0%,49%{opacity:1}50%,100%{opacity:0.2}}
+
+  /* ============ ACT II — VOWS (hymn line by line) ============ */
+  .lt-vows {
+    position: relative; padding: 160px 96px;
+    background:
+      radial-gradient(ellipse 50% 80% at 50% 50%, rgba(91,10,10,0.12), transparent 70%),
+      var(--bg-1);
+    border-top: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .lt-vows::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: 0.18; pointer-events: none;
+    mask-image: radial-gradient(ellipse 70% 80% at 50% 50%, #000 30%, transparent 80%);
+  }
+  .lt-vows-head { display: grid; grid-template-columns: auto 1fr auto; align-items: end; gap: 32px; padding-bottom: 80px; border-bottom: 1px solid var(--line); margin-bottom: 96px; position: relative; z-index: 2; }
+  .lt-roman { font-family: var(--display); font-weight: 600; font-size: 64px; color: var(--blood); line-height: 1; }
+  .lt-vows-head h2 { font-family: var(--display); font-weight: 700; font-size: 28px; letter-spacing: 0.2em; }
+  .lt-vows-head .meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.24em; color: var(--bone-faint); text-transform: uppercase; text-align: right; }
+  .lt-vows-list { display: flex; flex-direction: column; gap: 0; max-width: 1100px; margin: 0 auto; position: relative; z-index: 2; }
+  .lt-vow {
+    display: grid; grid-template-columns: 80px 1fr auto; gap: 40px; align-items: baseline;
+    padding: 40px 0;
+    border-bottom: 1px solid var(--line);
+    transition: padding-left .4s ease, color .4s ease;
+  }
+  .lt-vow:hover { padding-left: 24px; color: var(--bone); }
+  .lt-vow:hover .lt-vow-num { color: var(--blood-bright); }
+  .lt-vow-num { font-family: var(--mono); font-size: 12px; letter-spacing: 0.24em; color: var(--bone-faint); }
+  .lt-vow-text {
+    font-family: var(--display); font-weight: 400; font-style: italic;
+    font-size: clamp(24px, 3.4vw, 44px); line-height: 1.25; letter-spacing: 0.01em;
+    color: var(--bone);
+  }
+  .lt-vow-text b { color: var(--blood-bright); font-weight: 400; font-style: normal; }
+  .lt-vow-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.3em; color: var(--bone-faint); text-transform: uppercase; }
+  @media (max-width: 720px) {
+    .lt-vows { padding: 96px 24px; }
+    .lt-vow { grid-template-columns: 1fr; gap: 8px; padding: 28px 0; }
+    .lt-vow-tag { display: none; }
+    .lt-vows-head { grid-template-columns: 1fr; gap: 12px; padding-bottom: 48px; margin-bottom: 56px; }
+    .lt-roman { font-size: 44px; }
+  }
+
+  /* ============ ACT III — RELICS (horizontal scroll catalog) ============ */
+  .lt-relics {
+    position: relative; padding: 140px 0 160px;
+    background: var(--bg-0);
+    border-top: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .lt-relics-head { display: flex; justify-content: space-between; align-items: end; padding: 0 64px 56px; gap: 24px; flex-wrap: wrap; }
+  .lt-relics-head .left { display: flex; gap: 24px; align-items: end; }
+  .lt-relics-head h2 { font-family: var(--display); font-size: 28px; letter-spacing: 0.2em; font-weight: 700; }
+  .lt-relics-head p { font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; color: var(--bone-faint); text-transform: uppercase; max-width: 320px; line-height: 1.7; }
+  .lt-relics-scroll {
+    display: grid; grid-auto-flow: column; grid-auto-columns: clamp(260px, 28vw, 380px);
+    gap: 0; padding: 0 64px;
+    overflow-x: auto; overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .lt-relics-scroll::-webkit-scrollbar { display: none; }
+  .lt-relic {
+    position: relative; scroll-snap-align: start;
+    border: 1px solid var(--line); border-right: none;
+    background: var(--bg-1);
+    display: grid; grid-template-rows: auto 1fr auto;
+    transition: background .3s;
+    cursor: pointer;
+  }
+  .lt-relic:last-child { border-right: 1px solid var(--line); }
+  .lt-relic:hover { background: var(--bg-2); }
+  .lt-relic-head {
+    display: flex; justify-content: space-between;
+    padding: 16px 20px; border-bottom: 1px solid var(--line);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em; color: var(--bone-faint); text-transform: uppercase;
+  }
+  .lt-relic-media {
+    aspect-ratio: 4/5; position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse 50% 50% at 50% 40%, rgba(91,10,10,0.45), transparent 60%),
+      linear-gradient(180deg, #1a0606 0%, #0a0a0a 100%);
+    display: grid; place-items: center;
+  }
+  .lt-relic-media .glyph { width: 56%; aspect-ratio: 1; color: var(--blood); opacity: 0.75; transition: transform .5s, color .35s; }
+  .lt-relic:hover .lt-relic-media .glyph { transform: rotate(60deg) scale(1.05); color: var(--blood-bright); }
+  .lt-relic-media .ring {
+    position: absolute; inset: 12%;
+    border: 1px solid var(--line-2);
+    border-radius: 50%;
+    animation: rotCW 60s linear infinite;
+  }
+  .lt-relic-media .ring::before {
+    content: ""; position: absolute; left: 50%; top: -3px; width: 4px; height: 4px;
+    background: var(--blood-bright); border-radius: 50%;
+    transform: translateX(-50%); box-shadow: 0 0 8px var(--crimson);
+  }
+  .lt-relic-foot {
+    padding: 20px; border-top: 1px solid var(--line);
+    display: grid; gap: 6px;
+  }
+  .lt-relic-foot h3 { font-family: var(--display); font-weight: 700; font-size: 18px; letter-spacing: 0.12em; }
+  .lt-relic-foot .price { font-family: var(--mono); font-size: 12px; color: var(--bone-dim); display: flex; justify-content: space-between; }
+  .lt-relic-foot .price b { color: var(--blood-bright); font-weight: 400; }
+
+  .lt-relics-progress {
+    position: relative;
+    margin: 56px 64px 0;
+    height: 1px; background: var(--line);
+  }
+  .lt-relics-progress::before {
+    content: ""; position: absolute; left: 0; top: -1px; height: 3px; width: var(--rp, 18%);
+    background: var(--blood-bright); box-shadow: 0 0 12px var(--crimson);
+    transition: width .2s;
+  }
+  .lt-relics-hint {
+    margin: 16px 64px 0;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.3em; color: var(--bone-faint); text-transform: uppercase;
+    display: flex; justify-content: space-between;
+  }
+  @media (max-width: 720px) { .lt-relics-head, .lt-relics-scroll, .lt-relics-progress, .lt-relics-hint { padding-left: 24px; padding-right: 24px; margin-left: 0; margin-right: 0; } }
+
+  /* ============ ACT IV — CALL ============ */
+  .lt-call {
+    position: relative; padding: 140px 64px 80px;
+    background: radial-gradient(ellipse at center, #1a0606 0%, var(--bg-0) 60%);
+    border-top: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .lt-call-glyph {
+    position: absolute; left: 50%; top: 0; transform: translate(-50%,-25%);
+    width: min(800px, 100%); aspect-ratio: 1; opacity: 0.18; color: var(--blood);
+    pointer-events: none;
+  }
+  .lt-call-glyph svg { width: 100%; height: 100%; animation: rotCW 200s linear infinite; }
+  .lt-call-inner { position: relative; z-index: 2; max-width: 720px; margin: 0 auto; text-align: center; }
+  .lt-call h2 {
+    font-family: var(--display); font-weight: 800;
+    font-size: clamp(40px, 6.4vw, 88px); letter-spacing: 0.06em; line-height: 0.95;
+    margin-bottom: 28px;
+  }
+  .lt-call h2 em { font-style: italic; font-weight: 400; color: var(--blood-bright); }
+  .lt-call p {
+    font-family: var(--mono); font-size: 13px; line-height: 1.7; letter-spacing: 0.06em;
+    color: var(--bone-dim); margin-bottom: 36px;
+  }
+  .lt-form { display: flex; gap: 8px; }
+  .lt-form input {
+    flex: 1; background: rgba(10,10,10,0.6); border: 1px solid var(--line-2); color: var(--bone);
+    padding: 16px 20px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em;
+    text-transform: uppercase; outline: none;
+  }
+  .lt-form input:focus { border-color: var(--blood-bright); }
+  .lt-form button {
+    padding: 16px 28px; background: var(--blood); border: 1px solid var(--blood-bright);
+    color: var(--bone); font-family: var(--mono); font-size: 12px; letter-spacing: 0.24em;
+    text-transform: uppercase; cursor: pointer; transition: background .25s;
+  }
+  .lt-form button:hover { background: var(--blood-bright); }
+  @media (max-width: 640px) { .lt-form { flex-direction: column; } }
+
+  /* footer */
+  .lt-footer {
+    border-top: 1px solid var(--line);
+    padding: 48px 64px 36px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px; align-items: end;
+  }
+  .lt-footer .col h4 { font-family: var(--display); font-weight: 600; font-size: 13px; letter-spacing: 0.22em; margin-bottom: 14px; }
+  .lt-footer .col a, .lt-footer .col span { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; color: var(--bone-dim); margin-bottom: 8px; transition: color .2s; }
+  .lt-footer .col a:hover { color: var(--blood-bright); }
+  .lt-footer .center { text-align: center; }
+  .lt-footer .center .mark { color: var(--blood-bright); display: inline-flex; }
+  .lt-footer .center .word { font-family: var(--display); font-weight: 700; font-size: 16px; letter-spacing: 0.22em; margin-top: 10px; }
+  .lt-footer .center .tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em; color: var(--bone-faint); margin-top: 8px; text-transform: uppercase; }
+  .lt-copy { padding: 18px 64px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; color: var(--bone-faint); text-transform: uppercase; }
+  @media (max-width: 720px) { .lt-footer { grid-template-columns: 1fr; padding: 40px 24px 24px; } .lt-copy { padding: 16px 24px; flex-direction: column; gap: 8px; } }
+</style>
+</head>
+<body>
+
+<div class="lt-rail">OBSIDIAN HYMN — INVOCATION ACT I — IV — SS / 26</div>
+<div class="lt-rail lt-rail-r">SESSION 7C-3F1A — ENTER CROWNED OR DO NOT ENTER</div>
+
+<nav class="lt-nav">
+  <div class="lt-nav-l">
+    <a>I · VEIL</a><a>II · VOWS</a><a>III · RELICS</a><a>IV · CALL</a>
+  </div>
+  <a class="lt-mark">OBSIDIAN <span class="amp">&</span> HYMN</a>
+  <div class="lt-nav-r">
+    <a>JOURNAL</a><a>VESTRY (0)</a>
+  </div>
+</nav>
+
+<!-- ACT I — VEIL -->
+<section class="lt-veil" data-screen-label="01 Veil">
+  <div class="lt-veil-img"><img src="assets/hero-crown.png" alt="" /></div>
+
+  <div class="lt-rings" aria-hidden="true">
+    <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-linecap="square">
+      <g class="r1" stroke="var(--line-2)" stroke-width="0.4">
+        <circle cx="100" cy="100" r="98" stroke-dasharray="2 6"/>
+        <circle cx="100" cy="100" r="92"/>
+      </g>
+      <g class="r2" stroke="var(--blood-deep)" stroke-width="0.7">
+        <path d="M 100 22 A 78 78 0 0 1 178 100"/>
+        <path d="M 178 100 A 78 78 0 0 1 100 178"/>
+        <path d="M 100 178 A 78 78 0 0 1 22 100"/>
+        <path d="M 22 100 A 78 78 0 0 1 100 22"/>
+      </g>
+      <g class="r3" stroke="var(--blood)" stroke-width="0.9">
+        <circle cx="100" cy="100" r="60"/>
+        <path d="M 100 50 L 96 56 M 100 50 L 104 56"/>
+        <path d="M 100 150 L 96 144 M 100 150 L 104 144"/>
+        <path d="M 50 100 L 56 96 M 50 100 L 56 104"/>
+        <path d="M 150 100 L 144 96 M 150 100 L 144 104"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="lt-veil-vignette"></div>
+
+  <div class="lt-act">
+    <span class="lt-eyebrow">ACT I — THE VEIL LIFTS</span>
+    <h1>
+      <span>OBSIDIAN</span>
+      <span class="l2">— a hymn to —</span>
+      <span>HYMN</span>
+    </h1>
+    <p class="lt-act-sub">A wardrobe forged for those who would rather be feared than forgotten. SS / 26 — The Crowning. Twelve relics. One litany. Worn black, worn slow.</p>
+    <button class="lt-act-cta">ENTER THE LITURGY <span>→</span></button>
+  </div>
+
+  <div class="lt-tickline">
+    <span><span class="blink"></span>LIVE — SS / 26 INVOCATION</span>
+    <span>FOUR ACTS · TWELVE RELICS · NO RETURNS</span>
+    <span>EST. 2024 · LONDON · NOWHERE</span>
+  </div>
+</section>
+
+<!-- ACT II — VOWS (hymn) -->
+<section class="lt-vows" data-screen-label="02 Vows">
+  <div class="lt-vows-head">
+    <span class="lt-roman">II</span>
+    <h2>VOWS · THE HYMN</h2>
+    <span class="meta">SPOKEN ALOUD<br/>OR NOT AT ALL</span>
+  </div>
+
+  <ol class="lt-vows-list">
+    <li class="lt-vow"><span class="lt-vow-num">i</span><span class="lt-vow-text">we will not <b>kneel</b> in cloth that knows our shape.</span><span class="lt-vow-tag">VESTMENT</span></li>
+    <li class="lt-vow"><span class="lt-vow-num">ii</span><span class="lt-vow-text">we will wear our <b>shadow</b> as outerwear.</span><span class="lt-vow-tag">SHADOW</span></li>
+    <li class="lt-vow"><span class="lt-vow-num">iii</span><span class="lt-vow-text">we will burn the soft <b>names</b> they gave us.</span><span class="lt-vow-tag">NAMING</span></li>
+    <li class="lt-vow"><span class="lt-vow-num">iv</span><span class="lt-vow-text">we will treat each <b>thorn</b> as a small architecture.</span><span class="lt-vow-tag">CROWN</span></li>
+    <li class="lt-vow"><span class="lt-vow-num">v</span><span class="lt-vow-text">we will let the <b>stone</b> in our chest answer first.</span><span class="lt-vow-tag">RELIC</span></li>
+    <li class="lt-vow"><span class="lt-vow-num">vi</span><span class="lt-vow-text">we will not <b>apologise</b> for the cathedral we are.</span><span class="lt-vow-tag">CODA</span></li>
+  </ol>
+</section>
+
+<!-- ACT III — RELICS -->
+<section class="lt-relics" data-screen-label="03 Relics">
+  <div class="lt-relics-head">
+    <div class="left">
+      <span class="lt-roman">III</span>
+      <h2>RELICS · THE TWELVE</h2>
+    </div>
+    <p>Twelve garments. Each numbered, each named, each priced as if it cost something to be made.</p>
+  </div>
+
+  <div class="lt-relics-scroll" id="relics">
+    <!-- 12 relics -->
+    <article class="lt-relic">
+      <div class="lt-relic-head"><span>OH-001</span><span>£1,420</span></div>
+      <div class="lt-relic-media">
+        <div class="ring"></div>
+        <svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="50" cy="50" r="44"/><path d="M50 6 L50 94 M6 50 L94 50"/><path d="M50 24 L44 28 M50 24 L56 28"/><path d="M50 76 L44 72 M50 76 L56 72"/><circle cx="50" cy="50" r="4"/></svg>
+      </div>
+      <div class="lt-relic-foot"><h3>CROWN OF NAILS</h3><div class="price"><span>HEADPIECE · IRON</span><b>£1,420</b></div></div>
+    </article>
+    <article class="lt-relic">
+      <div class="lt-relic-head"><span>OH-002</span><span>£780</span></div>
+      <div class="lt-relic-media">
+        <div class="ring"></div>
+        <svg class="glyph" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M30 4 L30 56 M12 22 L48 22"/><path d="M30 4 L24 10 M30 4 L36 10"/><path d="M30 56 L24 50 M30 56 L36 50"/><circle cx="30" cy="22" r="2.5"/></svg>
+      </div>
+      <div class="lt-relic-foot"><h3>BARBED CHEMISE</h3><div class="price"><span>SHIRT · COTTON</span><b>£420</b></div></div>
+    </article>
+    <article class="lt-relic">
+      <div class="lt-relic-head"><span>OH-003</span><span>£2,180</span></div>
+      <div class="lt-relic-media">
+        <div class="ring"></div>
+        <svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M50 12 L88 50 L50 88 L12 50 Z"/><path d="M30 50 L70 50 M50 30 L50 70"/><circle cx="50" cy="50" r="6"/></svg>
+      </div>
+      <div class="lt-relic-foot"><h3>OBSIDIAN COAT</h3><div class="price"><span>OUTERWEAR · WAXED</span><b>£2,180</b></div></div>
+    </article>
+    <article class="lt-relic">
+      <div class="lt-relic-head"><span>OH-004</span><span>£640</span></div>
+      <div class="lt-relic-media">
+        <div class="ring"></div>
+        <svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="50" cy="50" r="40"/><circle cx="50" cy="50" r="20"/><path d="M50 10 L50 90 M10 50 L90 50"/></svg>
+      </div>
+      <div class="lt-relic-foot"><h3>HYMN SCARF</h3><div class="price"><span>WOOL · 2.4M</span><b>£340</b></div></div>
+    </article>
+    <article class="lt-relic">
+      <div class="lt-relic-head"><span>OH-005</span><span>£980</span></div>
+      <div class="lt-relic-media">
+        <div class="ring"></div>
+        <svg class="glyph" viewBox="0 0 200 100" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M10 90 L28 30 L36 70 L50 14 L60 70 L76 22 L86 72 L100 8 L114 72 L124 22 L140 70 L150 14 L164 70 L172 30 L190 90"/><path d="M10 90 L190 90"/></svg>
+      </div>
+      <div class="lt-relic-foot"><h3>THORN HARNESS</h3><div class="price"><span>LEATHER · BRASS</span><b>£980</b></div></div>
+    </article>
+    <article class="lt-relic">
+      <div class="lt-relic-head"><span>OH-006</span><span>£1,640</span></div>
+      <div class="lt-relic-media">
+        <div class="ring"></div>
+        <svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M20 80 L50 20 L80 80 Z"/><path d="M30 70 L70 70"/><circle cx="50" cy="58" r="3"/></svg>
+      </div>
+      <div class="lt-relic-foot"><h3>CATHEDRAL TROUSER</h3><div class="price"><span>WOOL · DRAPED</span><b>£860</b></div></div>
+    </article>
+    <article class="lt-relic">
+      <div class="lt-relic-head"><span>OH-007</span><span>£1,240</span></div>
+      <div class="lt-relic-media">
+        <div class="ring"></div>
+        <svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="50" cy="40" r="20"/><path d="M30 60 L20 90 M70 60 L80 90 M50 60 L50 90"/></svg>
+      </div>
+      <div class="lt-relic-foot"><h3>RELIQUARY VEST</h3><div class="price"><span>SILK · IRON</span><b>£1,240</b></div></div>
+    </article>
+    <article class="lt-relic">
+      <div class="lt-relic-head"><span>OH-008</span><span>£560</span></div>
+      <div class="lt-relic-media">
+        <div class="ring"></div>
+        <svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M20 50 L50 20 L80 50 L50 80 Z"/><path d="M50 35 L50 65 M35 50 L65 50"/></svg>
+      </div>
+      <div class="lt-relic-foot"><h3>SIGIL GLOVE</h3><div class="price"><span>NAPPA · PAIR</span><b>£260</b></div></div>
+    </article>
+    <article class="lt-relic">
+      <div class="lt-relic-head"><span>OH-009</span><span>£3,400</span></div>
+      <div class="lt-relic-media">
+        <div class="ring"></div>
+        <svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="50" cy="50" r="46"/><path d="M50 4 L50 96 M4 50 L96 50 M18 18 L82 82 M18 82 L82 18"/></svg>
+      </div>
+      <div class="lt-relic-foot"><h3>REQUIEM CLOAK</h3><div class="price"><span>WOOL · LINED</span><b>£3,400</b></div></div>
+    </article>
+    <article class="lt-relic">
+      <div class="lt-relic-head"><span>OH-010</span><span>£480</span></div>
+      <div class="lt-relic-media">
+        <div class="ring"></div>
+        <svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M30 30 L70 30 L70 70 L30 70 Z"/><path d="M40 40 L60 40 L60 60 L40 60 Z"/><circle cx="50" cy="50" r="3"/></svg>
+      </div>
+      <div class="lt-relic-foot"><h3>RITE BOOT</h3><div class="price"><span>LEATHER · 6 EYE</span><b>£480</b></div></div>
+    </article>
+    <article class="lt-relic">
+      <div class="lt-relic-head"><span>OH-011</span><span>£220</span></div>
+      <div class="lt-relic-media">
+        <div class="ring"></div>
+        <svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="50" cy="50" r="32"/><circle cx="50" cy="50" r="14"/></svg>
+      </div>
+      <div class="lt-relic-foot"><h3>VOW PIN</h3><div class="price"><span>STERLING · ENAMEL</span><b>£220</b></div></div>
+    </article>
+    <article class="lt-relic">
+      <div class="lt-relic-head"><span>OH-012</span><span>£3,800</span></div>
+      <div class="lt-relic-media">
+        <div class="ring"></div>
+        <svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M50 8 L92 50 L50 92 L8 50 Z"/><path d="M50 24 L76 50 L50 76 L24 50 Z"/><path d="M50 40 L60 50 L50 60 L40 50 Z"/><circle cx="50" cy="50" r="2" fill="currentColor"/></svg>
+      </div>
+      <div class="lt-relic-foot"><h3>THE CROWNING</h3><div class="price"><span>FINALE · 1 OF 7</span><b>£3,800</b></div></div>
+    </article>
+  </div>
+
+  <div class="lt-relics-progress"><i style="display:none"></i></div>
+  <div class="lt-relics-hint">
+    <span>← DRAG / SCROLL THE TWELVE</span>
+    <span><span id="relIdx">01</span> / 12</span>
+  </div>
+</section>
+
+<!-- ACT IV — CALL -->
+<section class="lt-call" data-screen-label="04 Call">
+  <div class="lt-call-glyph" aria-hidden="true">
+    <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-linecap="square" stroke-width="0.6">
+      <circle cx="100" cy="100" r="98"/>
+      <circle cx="100" cy="100" r="80" stroke-dasharray="2 6"/>
+      <circle cx="100" cy="100" r="60"/>
+      <circle cx="100" cy="100" r="40"/>
+      <path d="M100 2 L100 198 M2 100 L198 100"/>
+      <path d="M30 30 L170 170 M30 170 L170 30"/>
+    </svg>
+  </div>
+  <div class="lt-call-inner">
+    <h2>RECEIVE THE <em>SUMMONS</em></h2>
+    <p>Twelve relics. One door. We open it once. Leave the name you answer to and we will tell you when.</p>
+    <form class="lt-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='CONSECRATED ✓'">
+      <input type="email" placeholder="YOUR.NAME@SOMEWHERE" required />
+      <button type="submit">ANOINT ME</button>
+    </form>
+  </div>
+</section>
+
+<footer class="lt-footer">
+  <div class="col">
+    <h4>HOUSE</h4>
+    <a>JOURNAL</a><a>ATELIER</a><a>STOCKISTS</a><a>PRESS</a>
+  </div>
+  <div class="col center">
+    <span class="mark">
+      <svg width="42" height="42" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"><circle cx="50" cy="50" r="44"/><path d="M50 6 L50 94 M6 50 L94 50"/><path d="M50 18 L82 50 L50 82 L18 50 Z"/><circle cx="50" cy="50" r="4"/></svg>
+    </span>
+    <div class="word">OBSIDIAN <span style="color:var(--blood-bright)">&</span> HYMN</div>
+    <div class="tag">A WARDROBE FOR THE CROWNED</div>
+  </div>
+  <div class="col" style="text-align:right">
+    <h4>SUMMONS</h4>
+    <a>RETURNS</a><a>SIZING</a><a>CONTACT</a><a>POLICY</a>
+  </div>
+</footer>
+<div class="lt-copy"><span>© 2026 OBSIDIAN HYMN HOUSE</span><span>SS / 26 — THE CROWNING</span></div>
+
+<script>
+  // relics horizontal progress + index
+  const sc = document.getElementById('relics');
+  const prog = document.querySelector('.lt-relics-progress');
+  const idx = document.getElementById('relIdx');
+  function upd() {
+    const max = sc.scrollWidth - sc.clientWidth;
+    const r = max > 0 ? sc.scrollLeft / max : 0;
+    prog.style.setProperty('--rp', (12 + r * 88) + '%');
+    const which = Math.min(12, Math.max(1, Math.round(1 + r * 11)));
+    idx.textContent = String(which).padStart(2,'0');
+  }
+  sc.addEventListener('scroll', upd, { passive: true });
+  upd();
+</script>
+
+</body>
+</html>

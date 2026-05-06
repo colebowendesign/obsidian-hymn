@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OBSIDIAN HYMN — RELIQUARY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg-0:#0a0a0a; --bg-1:#0f0f0f; --bg-2:#141414; --bg-3:#1a1a1a;
+    --line:#2a2a2a; --line-2:#3a3a3a;
+    --bone:#e8e4dd; --bone-dim:#a8a5a0; --bone-faint:#6a6864;
+    --blood:#8B0000; --blood-deep:#5a0a0a; --blood-bright:#B91C1C; --crimson:#FF2D2D;
+    --display:'Cinzel','Times New Roman',serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --sans:'IBM Plex Sans',system-ui,sans-serif;
+  }
+  html,body{background:var(--bg-0);color:var(--bone);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  body{overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+  /* grain + scanlines */
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9000;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity:0.06;mix-blend-mode:overlay;animation:gn .8s steps(4) infinite}
+  @keyframes gn{0%,100%{transform:translate(0,0)}25%{transform:translate(-2px,1px)}50%{transform:translate(1px,-2px)}75%{transform:translate(2px,2px)}}
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:8999;
+    background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,rgba(0,0,0,0.18) 2px,rgba(0,0,0,0.18) 3px);
+    mix-blend-mode:multiply}
+
+  /* ============ LAYOUT — split rail + content ============ */
+  .rq-shell{
+    display:grid;
+    grid-template-columns: 320px 1fr;
+    min-height:100vh;
+  }
+  @media (max-width: 980px){ .rq-shell{ grid-template-columns: 1fr; } }
+
+  /* ============ LEFT RAIL — sticky figure altar ============ */
+  .rq-rail{
+    position: sticky; top: 0; align-self: start;
+    height: 100vh;
+    border-right: 1px solid var(--line);
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 30%, rgba(91,10,10,0.3), transparent 60%),
+      var(--bg-1);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    overflow: hidden;
+  }
+  @media (max-width: 980px){ .rq-rail{ position: relative; height: auto; border-right: 0; border-bottom: 1px solid var(--line); } }
+
+  .rq-rail-head{
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .rq-rail-head .mark{ color: var(--blood-bright); display: inline-flex; }
+  .rq-rail-head .word{ font-family: var(--display); font-weight: 700; font-size: 14px; letter-spacing: 0.22em; }
+  .rq-rail-head .amp{ color: var(--blood-bright); margin: 0 4px; }
+
+  .rq-altar{
+    position: relative;
+    overflow: hidden;
+    display: grid; place-items: center;
+    padding: 24px;
+  }
+  .rq-altar-img{ position: absolute; inset: 0; }
+  .rq-altar-img img{
+    width:100%;height:100%;object-fit:cover;object-position:center 28%;
+    filter: contrast(1.08) brightness(0.7) saturate(0.85);
+    -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 38%, #000 30%, rgba(0,0,0,0.6) 60%, transparent 95%);
+            mask-image: radial-gradient(ellipse 75% 70% at 50% 38%, #000 30%, rgba(0,0,0,0.6) 60%, transparent 95%);
+  }
+  .rq-altar-vignette{
+    position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse 40% 30% at 50% 30%, rgba(91,10,10,0.45), transparent 60%),
+      linear-gradient(to bottom, rgba(10,10,10,0.4), transparent 35%, transparent 65%, var(--bg-1));
+  }
+  .rq-altar-rings{ position: absolute; left: 50%; top: 36%; transform: translate(-50%,-50%); width: 110%; aspect-ratio: 1; opacity: .55; pointer-events: none; }
+  .rq-altar-rings svg{ width:100%; height:100%; }
+  .rq-altar-rings .ra{ animation: spinCW 80s linear infinite; transform-origin: 50% 50%; color: var(--line-2); }
+  .rq-altar-rings .rb{ animation: spinCCW 38s linear infinite; transform-origin: 50% 50%; color: var(--blood-deep); }
+  .rq-altar-rings .rc{ animation: spinCW 16s linear infinite; transform-origin: 50% 50%; color: var(--blood); }
+  @keyframes spinCW{to{transform:rotate(360deg)}}
+  @keyframes spinCCW{to{transform:rotate(-360deg)}}
+
+  /* wordmark stamped over altar */
+  .rq-altar-stamp{
+    position: relative; z-index: 3;
+    text-align: center;
+    align-self: end;
+    padding: 24px 0;
+    width: 100%;
+  }
+  .rq-altar-stamp .small{
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.42em; color: var(--bone-dim); text-transform: uppercase;
+    display: inline-flex; gap: 10px; align-items: center; margin-bottom: 14px;
+  }
+  .rq-altar-stamp .small::before, .rq-altar-stamp .small::after{ content:""; width: 24px; height: 1px; background: var(--bone-faint); }
+  .rq-altar-stamp h1{
+    font-family: var(--display); font-weight: 800;
+    font-size: clamp(34px, 4.6vw, 56px); letter-spacing: 0.04em; line-height: 0.92;
+    color: var(--blood-bright);
+    text-shadow: 0 0 1px rgba(0,0,0,0.9), 0 0 22px rgba(0,0,0,0.85), 0 0 50px rgba(139,0,0,0.5);
+  }
+  .rq-altar-stamp h1 span{ display:block; }
+  .rq-altar-stamp .ital{ font-style: italic; font-weight: 400; color: var(--blood); font-size: 0.36em; letter-spacing: 0.18em; margin: 8px 0; }
+
+  .rq-rail-foot{
+    border-top: 1px solid var(--line);
+    padding: 16px 20px;
+    display: grid; gap: 8px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em; color: var(--bone-faint); text-transform: uppercase;
+  }
+  .rq-rail-foot .row{ display: flex; justify-content: space-between; }
+  .rq-rail-foot .row b{ color: var(--bone-dim); font-weight: 400; }
+  .rq-rail-foot .row .live{ display:inline-flex; align-items:center; gap:8px; color: var(--blood-bright); }
+  .rq-rail-foot .row .live::before{ content:""; width:6px; height:6px; background: var(--blood-bright); box-shadow: 0 0 8px var(--crimson); animation: bk 1.2s steps(2) infinite; }
+  @keyframes bk{0%,49%{opacity:1}50%,100%{opacity:0.2}}
+
+  /* ============ RIGHT — content ============ */
+  .rq-main{ position: relative; }
+
+  /* mini nav at top of content */
+  .rq-topbar{
+    position: sticky; top: 0; z-index: 60;
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 16px 40px;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95), rgba(10,10,10,0.7));
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.24em; color: var(--bone-dim); text-transform: uppercase;
+  }
+  .rq-topbar .left{ display:flex; gap: 28px; }
+  .rq-topbar .left a:hover, .rq-topbar .right a:hover{ color: var(--blood-bright); }
+  .rq-topbar .center{ font-family: var(--display); letter-spacing: 0.32em; font-size: 12px; color: var(--bone-dim); }
+  .rq-topbar .right{ display: flex; justify-content: flex-end; gap: 18px; }
+  @media (max-width: 720px){ .rq-topbar{ padding: 14px 20px; grid-template-columns: 1fr auto; } .rq-topbar .left{ display:none; } }
+
+  /* ===== SECTION HEAD pattern ===== */
+  .rq-h{
+    display: grid; grid-template-columns: auto 1fr auto;
+    align-items: end; gap: 24px;
+    padding: 80px 56px 28px;
+    border-bottom: 1px solid var(--line);
+  }
+  .rq-h .roman{ font-family: var(--display); font-weight: 600; font-size: 56px; color: var(--blood); line-height: 1; }
+  .rq-h h2{ font-family: var(--display); font-weight: 700; font-size: 26px; letter-spacing: 0.2em; }
+  .rq-h .meta{ font-family: var(--mono); font-size: 11px; letter-spacing: 0.24em; color: var(--bone-faint); text-transform: uppercase; text-align: right; }
+  @media (max-width: 720px){ .rq-h{ grid-template-columns: 1fr; padding: 56px 24px 20px; } .rq-h .roman{ font-size: 36px; } }
+
+  /* ===== I · CREED ===== */
+  .rq-creed{ padding: 56px 56px; }
+  .rq-creed .lead{
+    font-family: var(--display); font-weight: 400; font-style: italic;
+    font-size: clamp(28px, 3.6vw, 48px); line-height: 1.25; letter-spacing: 0.01em;
+    color: var(--bone); max-width: 820px;
+  }
+  .rq-creed .lead b{ color: var(--blood-bright); font-weight: 400; font-style: normal; }
+  .rq-creed .stats{
+    margin-top: 64px;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  .rq-creed .stat{
+    padding: 28px 24px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    display: grid; gap: 6px;
+  }
+  .rq-creed .stat .n{ font-family: var(--display); font-weight: 700; font-size: 36px; color: var(--blood-bright); line-height: 1; }
+  .rq-creed .stat .l{ font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em; color: var(--bone-faint); text-transform: uppercase; }
+  @media (max-width: 980px){ .rq-creed{ padding: 48px 24px; } .rq-creed .stats{ grid-template-columns: repeat(2,1fr); } }
+
+  /* ===== II · INDEX (table-as-shop) ===== */
+  .rq-index{ padding: 0; }
+  .rq-table{ width: 100%; border-collapse: collapse; }
+  .rq-table th, .rq-table td{
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em;
+    color: var(--bone-dim); text-transform: uppercase;
+  }
+  .rq-table th{
+    color: var(--bone-faint); font-size: 10px; letter-spacing: 0.28em;
+    background: var(--bg-1);
+    border-bottom: 1px solid var(--line-2);
+    font-weight: 400;
+  }
+  .rq-table th:first-child, .rq-table td:first-child{ padding-left: 56px; }
+  .rq-table th:last-child, .rq-table td:last-child{ padding-right: 56px; text-align: right; }
+  .rq-table tbody tr{ transition: background .25s; cursor: pointer; }
+  .rq-table tbody tr:hover{ background: var(--bg-1); }
+  .rq-table tbody tr:hover .name{ color: var(--blood-bright); }
+  .rq-table .num{ color: var(--bone-faint); }
+  .rq-table .name{ color: var(--bone); font-family: var(--display); font-size: 18px; letter-spacing: 0.1em; font-weight: 600; transition: color .25s; }
+  .rq-table .price{ color: var(--bone); font-size: 13px; }
+  .rq-table .glyph{ width: 28px; height: 28px; color: var(--blood); display: inline-block; vertical-align: middle; }
+  .rq-table .acquire{
+    display: inline-block; padding: 8px 14px; border: 1px solid var(--line-2); color: var(--bone-dim);
+    font-size: 10px; letter-spacing: 0.22em; transition: all .2s;
+    clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+  }
+  .rq-table tr:hover .acquire{ background: var(--blood); color: var(--bone); border-color: var(--blood-bright); box-shadow: 0 0 12px rgba(255,45,45,0.4); }
+  @media (max-width: 720px){
+    .rq-table th, .rq-table td{ padding: 16px 12px; font-size: 11px; }
+    .rq-table th:first-child, .rq-table td:first-child{ padding-left: 24px; }
+    .rq-table th:last-child, .rq-table td:last-child{ padding-right: 24px; }
+    .rq-table .hide-sm{ display: none; }
+    .rq-table .name{ font-size: 14px; }
+  }
+
+  /* ===== III · CYCLE (timeline) ===== */
+  .rq-cycle{ padding: 80px 56px 96px; background: var(--bg-1); border-top: 1px solid var(--line); }
+  .rq-cycle-grid{
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border-left: 1px solid var(--line); border-top: 1px solid var(--line);
+    margin-top: 40px;
+  }
+  .rq-cycle-cell{
+    border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    padding: 32px 28px; min-height: 220px;
+    display: grid; grid-template-rows: auto 1fr auto; gap: 16px;
+    background: var(--bg-1); transition: background .25s;
+    position: relative;
+  }
+  .rq-cycle-cell:hover{ background: var(--bg-0); }
+  .rq-cycle-cell .when{ font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em; color: var(--blood-bright); text-transform: uppercase; }
+  .rq-cycle-cell h3{ font-family: var(--display); font-size: 22px; letter-spacing: 0.12em; font-weight: 700; }
+  .rq-cycle-cell p{ font-family: var(--mono); font-size: 12px; line-height: 1.6; color: var(--bone-dim); }
+  .rq-cycle-cell .dot{ width: 10px; height: 10px; border: 1px solid var(--blood-bright); position: absolute; right: 20px; top: 20px; transform: rotate(45deg); }
+  .rq-cycle-cell.is-now .dot{ background: var(--blood-bright); box-shadow: 0 0 12px var(--crimson); }
+  .rq-cycle-cell.is-now h3{ color: var(--blood-bright); }
+  @media (max-width: 980px){ .rq-cycle-grid{ grid-template-columns: 1fr; } .rq-cycle{ padding: 56px 24px; } }
+
+  /* ===== IV · CHAMBER (sigil + summons) ===== */
+  .rq-chamber{
+    position: relative;
+    padding: 120px 56px;
+    border-top: 1px solid var(--line);
+    background: radial-gradient(ellipse at center, #1a0606 0%, var(--bg-0) 60%);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    overflow: hidden;
+  }
+  .rq-chamber-bg{
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    width: min(800px, 100%); aspect-ratio: 1; opacity: .12; color: var(--blood);
+    pointer-events: none;
+  }
+  .rq-chamber-bg svg{ width:100%; height:100%; animation: spinCW 200s linear infinite; }
+  .rq-chamber-text{ position: relative; z-index: 2; }
+  .rq-chamber-text h2{
+    font-family: var(--display); font-weight: 800;
+    font-size: clamp(40px, 5.2vw, 72px); line-height: 0.95; letter-spacing: 0.04em;
+    margin-bottom: 24px;
+  }
+  .rq-chamber-text h2 em{ font-style: italic; color: var(--blood-bright); font-weight: 400; }
+  .rq-chamber-text p{ font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--bone-dim); margin-bottom: 32px; max-width: 480px; }
+  .rq-form{ display: flex; gap: 8px; max-width: 480px; }
+  .rq-form input{ flex: 1; background: rgba(10,10,10,0.6); border: 1px solid var(--line-2); color: var(--bone); padding: 16px 20px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; outline: none; }
+  .rq-form input:focus{ border-color: var(--blood-bright); }
+  .rq-form button{ padding: 16px 24px; background: var(--blood); border: 1px solid var(--blood-bright); color: var(--bone); font-family: var(--mono); font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; transition: background .25s; }
+  .rq-form button:hover{ background: var(--blood-bright); }
+  .rq-chamber-sigil{ position: relative; z-index: 2; display: grid; place-items: center; }
+  .rq-chamber-sigil svg{ width: min(380px, 80%); height: auto; color: var(--blood); filter: drop-shadow(0 0 24px rgba(185,28,28,0.4)); animation: pulseGlow 3s ease-in-out infinite; }
+  @keyframes pulseGlow{ 0%,100%{ filter: drop-shadow(0 0 18px rgba(185,28,28,0.35)); } 50%{ filter: drop-shadow(0 0 32px rgba(255,45,45,0.7)); } }
+  @media (max-width: 980px){ .rq-chamber{ grid-template-columns: 1fr; padding: 80px 24px; gap: 40px; } .rq-chamber-sigil{ order: -1; } }
+
+  /* footer */
+  .rq-foot{
+    padding: 32px 56px;
+    border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; color: var(--bone-faint); text-transform: uppercase;
+  }
+  .rq-foot .links a{ margin-left: 18px; transition: color .2s; }
+  .rq-foot .links a:hover{ color: var(--blood-bright); }
+  @media (max-width: 720px){ .rq-foot{ padding: 24px; flex-direction: column; gap: 12px; } .rq-foot .links a{ margin: 0 8px; } }
+</style>
+</head>
+<body>
+
+<div class="rq-shell">
+
+  <!-- LEFT RAIL — sticky figure -->
+  <aside class="rq-rail">
+    <div class="rq-rail-head">
+      <span class="mark">
+        <svg width="22" height="22" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><circle cx="50" cy="50" r="44"/><path d="M50 6 L50 94 M6 50 L94 50"/><path d="M50 18 L82 50 L50 82 L18 50 Z"/></svg>
+      </span>
+      <span class="word">OBSIDIAN<span class="amp">&</span>HYMN</span>
+    </div>
+
+    <div class="rq-altar">
+      <div class="rq-altar-img"><img src="assets/hero-crown.png" alt="" /></div>
+      <div class="rq-altar-vignette"></div>
+      <div class="rq-altar-rings" aria-hidden="true">
+        <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-linecap="square">
+          <g class="ra" stroke-width="0.4"><circle cx="100" cy="100" r="98" stroke-dasharray="2 6"/><circle cx="100" cy="100" r="92"/></g>
+          <g class="rb" stroke-width="0.7"><path d="M 100 22 A 78 78 0 0 1 178 100"/><path d="M 178 100 A 78 78 0 0 1 100 178"/><path d="M 100 178 A 78 78 0 0 1 22 100"/><path d="M 22 100 A 78 78 0 0 1 100 22"/></g>
+          <g class="rc" stroke-width="0.9"><circle cx="100" cy="100" r="60"/><path d="M 100 50 L 96 56 M 100 50 L 104 56"/><path d="M 100 150 L 96 144 M 100 150 L 104 144"/><path d="M 50 100 L 56 96 M 50 100 L 56 104"/><path d="M 150 100 L 144 96 M 150 100 L 144 104"/></g>
+        </svg>
+      </div>
+      <div class="rq-altar-stamp">
+        <span class="small">SS / 26 — THE CROWNING</span>
+        <h1>
+          <span>OBSIDIAN</span>
+          <span class="ital">a hymn for</span>
+          <span>HYMN</span>
+        </h1>
+      </div>
+    </div>
+
+    <div class="rq-rail-foot">
+      <div class="row"><span>EDITION</span><b>SS / 26</b></div>
+      <div class="row"><span>RELICS</span><b>XII / 12</b></div>
+      <div class="row"><span>STATE</span><span class="live">LIVE</span></div>
+    </div>
+  </aside>
+
+  <!-- RIGHT MAIN -->
+  <main class="rq-main">
+
+    <div class="rq-topbar">
+      <div class="left">
+        <a href="#creed">I · CREED</a>
+        <a href="#index">II · INDEX</a>
+        <a href="#cycle">III · CYCLE</a>
+        <a href="#chamber">IV · CHAMBER</a>
+      </div>
+      <div class="center">RELIQUARY</div>
+      <div class="right">
+        <a>JOURNAL</a><a>VESTRY (0)</a>
+      </div>
+    </div>
+
+    <!-- I · CREED -->
+    <section id="creed" data-screen-label="01 Creed">
+      <div class="rq-h">
+        <span class="roman">I</span>
+        <h2>CREED · THE HOUSE</h2>
+        <span class="meta">A WARDROBE FOR<br/>THE CROWNED</span>
+      </div>
+      <div class="rq-creed">
+        <p class="lead">Twelve relics, cut slow and worn black. We do not <b>dress</b> bodies — we <b>arm</b> them. Each garment is named, numbered, sworn over. Each is meant to outlast you.</p>
+
+        <div class="stats">
+          <div class="stat"><span class="n">12</span><span class="l">RELICS / EDITION</span></div>
+          <div class="stat"><span class="n">04</span><span class="l">ARCHETYPES</span></div>
+          <div class="stat"><span class="n">01</span><span class="l">DROP / YEAR</span></div>
+          <div class="stat"><span class="n">∞</span><span class="l">RETURNS · NONE</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- II · INDEX -->
+    <section id="index" data-screen-label="02 Index">
+      <div class="rq-h">
+        <span class="roman">II</span>
+        <h2>INDEX · THE TWELVE</h2>
+        <span class="meta">EACH ITEM<br/>SWORN OVER</span>
+      </div>
+      <table class="rq-table">
+        <thead>
+          <tr>
+            <th>№</th><th></th><th>RELIC</th><th class="hide-sm">CATEGORY</th><th class="hide-sm">MATERIAL</th><th>PRICE</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="num">001</td>
+            <td><svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2"><circle cx="50" cy="50" r="44"/><path d="M50 6 L50 94 M6 50 L94 50"/></svg></td>
+            <td><span class="name">CROWN OF NAILS</span></td>
+            <td class="hide-sm">HEADPIECE</td><td class="hide-sm">IRON · LACQUER</td>
+            <td class="price">£1,420</td>
+            <td><span class="acquire">ACQUIRE →</span></td>
+          </tr>
+          <tr>
+            <td class="num">002</td>
+            <td><svg class="glyph" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="2"><path d="M30 4 L30 56 M12 22 L48 22"/></svg></td>
+            <td><span class="name">BARBED CHEMISE</span></td>
+            <td class="hide-sm">SHIRT</td><td class="hide-sm">COTTON · STEEL</td>
+            <td class="price">£420</td>
+            <td><span class="acquire">ACQUIRE →</span></td>
+          </tr>
+          <tr>
+            <td class="num">003</td>
+            <td><svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2"><path d="M50 12 L88 50 L50 88 L12 50 Z"/></svg></td>
+            <td><span class="name">OBSIDIAN COAT</span></td>
+            <td class="hide-sm">OUTERWEAR</td><td class="hide-sm">WAXED COTTON</td>
+            <td class="price">£2,180</td>
+            <td><span class="acquire">ACQUIRE →</span></td>
+          </tr>
+          <tr>
+            <td class="num">004</td>
+            <td><svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2"><circle cx="50" cy="50" r="40"/><circle cx="50" cy="50" r="20"/></svg></td>
+            <td><span class="name">HYMN SCARF</span></td>
+            <td class="hide-sm">ACCESSORY</td><td class="hide-sm">WOOL · 2.4M</td>
+            <td class="price">£340</td>
+            <td><span class="acquire">ACQUIRE →</span></td>
+          </tr>
+          <tr>
+            <td class="num">005</td>
+            <td><svg class="glyph" viewBox="0 0 200 100" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 90 L40 30 L60 70 L100 14 L140 70 L160 30 L190 90"/><path d="M10 90 L190 90"/></svg></td>
+            <td><span class="name">THORN HARNESS</span></td>
+            <td class="hide-sm">BODY</td><td class="hide-sm">LEATHER · BRASS</td>
+            <td class="price">£980</td>
+            <td><span class="acquire">ACQUIRE →</span></td>
+          </tr>
+          <tr>
+            <td class="num">006</td>
+            <td><svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 80 L50 20 L80 80 Z"/></svg></td>
+            <td><span class="name">CATHEDRAL TROUSER</span></td>
+            <td class="hide-sm">TROUSER</td><td class="hide-sm">WOOL · DRAPED</td>
+            <td class="price">£860</td>
+            <td><span class="acquire">ACQUIRE →</span></td>
+          </tr>
+          <tr>
+            <td class="num">007</td>
+            <td><svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2"><circle cx="50" cy="40" r="20"/><path d="M30 60 L20 90 M70 60 L80 90 M50 60 L50 90"/></svg></td>
+            <td><span class="name">RELIQUARY VEST</span></td>
+            <td class="hide-sm">VEST</td><td class="hide-sm">SILK · IRON</td>
+            <td class="price">£1,240</td>
+            <td><span class="acquire">ACQUIRE →</span></td>
+          </tr>
+          <tr>
+            <td class="num">008</td>
+            <td><svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 50 L50 20 L80 50 L50 80 Z"/><path d="M50 35 L50 65 M35 50 L65 50"/></svg></td>
+            <td><span class="name">SIGIL GLOVE</span></td>
+            <td class="hide-sm">GLOVE</td><td class="hide-sm">NAPPA · PAIR</td>
+            <td class="price">£260</td>
+            <td><span class="acquire">ACQUIRE →</span></td>
+          </tr>
+          <tr>
+            <td class="num">009</td>
+            <td><svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2"><circle cx="50" cy="50" r="46"/><path d="M50 4 L50 96 M4 50 L96 50 M18 18 L82 82 M18 82 L82 18"/></svg></td>
+            <td><span class="name">REQUIEM CLOAK</span></td>
+            <td class="hide-sm">OUTERWEAR</td><td class="hide-sm">WOOL · LINED</td>
+            <td class="price">£3,400</td>
+            <td><span class="acquire">ACQUIRE →</span></td>
+          </tr>
+          <tr>
+            <td class="num">010</td>
+            <td><svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2"><path d="M30 30 L70 30 L70 70 L30 70 Z"/><path d="M40 40 L60 40 L60 60 L40 60 Z"/></svg></td>
+            <td><span class="name">RITE BOOT</span></td>
+            <td class="hide-sm">FOOTWEAR</td><td class="hide-sm">LEATHER · 6 EYE</td>
+            <td class="price">£480</td>
+            <td><span class="acquire">ACQUIRE →</span></td>
+          </tr>
+          <tr>
+            <td class="num">011</td>
+            <td><svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2"><circle cx="50" cy="50" r="32"/><circle cx="50" cy="50" r="14"/></svg></td>
+            <td><span class="name">VOW PIN</span></td>
+            <td class="hide-sm">JEWEL</td><td class="hide-sm">STERLING · ENAMEL</td>
+            <td class="price">£220</td>
+            <td><span class="acquire">ACQUIRE →</span></td>
+          </tr>
+          <tr>
+            <td class="num">012</td>
+            <td><svg class="glyph" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2"><path d="M50 8 L92 50 L50 92 L8 50 Z"/><path d="M50 24 L76 50 L50 76 L24 50 Z"/><circle cx="50" cy="50" r="3" fill="currentColor"/></svg></td>
+            <td><span class="name">THE CROWNING</span></td>
+            <td class="hide-sm">FINALE</td><td class="hide-sm">1 OF 7 · NUMBERED</td>
+            <td class="price">£3,800</td>
+            <td><span class="acquire">ACQUIRE →</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- III · CYCLE -->
+    <section id="cycle" class="rq-cycle" data-screen-label="03 Cycle">
+      <div class="rq-h" style="padding: 0 0 28px; border-bottom: 1px solid var(--line);">
+        <span class="roman">III</span>
+        <h2>CYCLE · THE SIX RITES</h2>
+        <span class="meta">FROM FORGE<br/>TO RECKONING</span>
+      </div>
+      <div class="rq-cycle-grid">
+        <div class="rq-cycle-cell"><span class="dot"></span><span class="when">PHASE I</span><h3>THE SUMMONS</h3><p>The wardrobe is announced, never advertised. Whisper, sigil, sealed envelope.</p></div>
+        <div class="rq-cycle-cell"><span class="dot"></span><span class="when">PHASE II</span><h3>THE CUTTING</h3><p>Bone, wool, waxed cotton. Every stitch is a vow held tightly enough to bleed.</p></div>
+        <div class="rq-cycle-cell is-now"><span class="dot"></span><span class="when">PHASE III · NOW</span><h3>THE CROWNING</h3><p>The relics are placed. The hymn is spoken. The doors open for one breath.</p></div>
+        <div class="rq-cycle-cell"><span class="dot"></span><span class="when">PHASE IV</span><h3>THE WEARING</h3><p>The garment outlives the season. It is meant to be ruined slowly, on purpose.</p></div>
+        <div class="rq-cycle-cell"><span class="dot"></span><span class="when">PHASE V</span><h3>THE PROCESSION</h3><p>Once a year, those crowned walk wherever they choose, however slowly.</p></div>
+        <div class="rq-cycle-cell"><span class="dot"></span><span class="when">PHASE VI</span><h3>THE RECKONING</h3><p>The next hymn is composed. The relics are retired. We begin again.</p></div>
+      </div>
+    </section>
+
+    <!-- IV · CHAMBER -->
+    <section id="chamber" class="rq-chamber" data-screen-label="04 Chamber">
+      <div class="rq-chamber-bg" aria-hidden="true">
+        <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-linecap="square" stroke-width="0.6">
+          <circle cx="100" cy="100" r="98"/>
+          <circle cx="100" cy="100" r="80" stroke-dasharray="2 6"/>
+          <circle cx="100" cy="100" r="60"/>
+          <circle cx="100" cy="100" r="40"/>
+          <path d="M100 2 L100 198 M2 100 L198 100"/>
+          <path d="M30 30 L170 170 M30 170 L170 30"/>
+        </svg>
+      </div>
+
+      <div class="rq-chamber-text">
+        <h2>ENTER THE <em>CHAMBER</em></h2>
+        <p>One door, one breath. We open the reliquary once. Leave the name you answer to and we will tell you when to step through.</p>
+        <form class="rq-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='CONSECRATED ✓'">
+          <input type="email" placeholder="YOUR.NAME@SOMEWHERE" required />
+          <button type="submit">ANOINT ME</button>
+        </form>
+      </div>
+
+      <div class="rq-chamber-sigil" aria-hidden="true">
+        <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-linecap="square" stroke-width="1.2">
+          <circle cx="100" cy="100" r="96"/>
+          <circle cx="100" cy="100" r="78" stroke-dasharray="2 6"/>
+          <path d="M 100 22 A 78 78 0 0 1 178 100"/>
+          <path d="M 178 100 A 78 78 0 0 1 100 178"/>
+          <path d="M 100 178 A 78 78 0 0 1 22 100"/>
+          <path d="M 22 100 A 78 78 0 0 1 100 22"/>
+          <path d="M 100 38 L 162 100 L 100 162 L 38 100 Z"/>
+          <path d="M 100 60 L 140 100 L 100 140 L 60 100 Z"/>
+          <path d="M100 4 L100 196 M4 100 L196 100"/>
+          <path d="M100 14 L94 22 M100 14 L106 22"/>
+          <path d="M100 186 L94 178 M100 186 L106 178"/>
+          <path d="M14 100 L22 94 M14 100 L22 106"/>
+          <path d="M186 100 L178 94 M186 100 L178 106"/>
+          <circle cx="100" cy="100" r="8"/>
+          <circle cx="100" cy="100" r="2" fill="currentColor"/>
+        </svg>
+      </div>
+    </section>
+
+    <footer class="rq-foot">
+      <span>© 2026 OBSIDIAN HYMN HOUSE — LONDON</span>
+      <div class="links">
+        <a>JOURNAL</a><a>RETURNS</a><a>SIZING</a><a>CONTACT</a>
+      </div>
+    </footer>
+  </main>
+
+</div>
+
+</body>
+</html>

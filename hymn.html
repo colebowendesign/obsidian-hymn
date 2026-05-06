@@ -202,25 +202,16 @@
     background: var(--bg-0);
   }
   .oh-hero-image { position: absolute; inset: 0; }
-  .oh-hero-image img {
+  .oh-hero-image img,
+  .oh-hero-image video {
     width: 100%; height: 100%; object-fit: cover; object-position: center top;
     filter: contrast(1.05) brightness(0.85) saturate(1.1);
   }
-  /* Background plate sits at the very bottom (z=0). The figure column is darkened
-     so when the red headline is layered above it, the figure area reads as a
-     solid-ish silhouette instead of the photo competing with the type. */
   .oh-hero-image--bg { z-index: 0; }
-  .oh-hero-image--bg img {
+  .oh-hero-image--bg img,
+  .oh-hero-image--bg video {
     -webkit-mask-image: radial-gradient(ellipse 22% 80% at 50% 38%, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 40%, #000 70%);
             mask-image: radial-gradient(ellipse 22% 80% at 50% 38%, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 40%, #000 70%);
-  }
-  /* Figure cutout sits BELOW the headline now (z=1). Only the central subject
-     survives the mask; surrounding image becomes transparent. */
-  .oh-hero-image--figure { z-index: 1; pointer-events: none; }
-  .oh-hero-image--figure img {
-    filter: contrast(1.1) brightness(1) saturate(1.05) drop-shadow(0 12px 40px rgba(0,0,0,0.7));
-    -webkit-mask-image: radial-gradient(ellipse 18% 60% at 50% 42%, #000 0%, #000 55%, transparent 78%);
-            mask-image: radial-gradient(ellipse 18% 60% at 50% 42%, #000 0%, #000 55%, transparent 78%);
   }
   .oh-hero-vignette {
     position: absolute; inset: 0;

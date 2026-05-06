@@ -70,7 +70,8 @@
     padding: 24px;
   }
   .rq-altar-img{ position: absolute; inset: 0; }
-  .rq-altar-img img{
+  .rq-altar-img img,
+  .rq-altar-img video{
     width:100%;height:100%;object-fit:cover;object-position:center 28%;
     filter: contrast(1.08) brightness(0.7) saturate(0.85);
     -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 38%, #000 30%, rgba(0,0,0,0.6) 60%, transparent 95%);
@@ -301,7 +302,7 @@
     </div>
 
     <div class="rq-altar">
-      <div class="rq-altar-img"><img src="assets/hero-crown.png" alt="" /></div>
+      <div class="rq-altar-img"><video autoplay loop muted playsinline><source src="assets/hero-video.mp4" type="video/mp4"></video></div>
       <div class="rq-altar-vignette"></div>
       <div class="rq-altar-rings" aria-hidden="true">
         <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-linecap="square">

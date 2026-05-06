@@ -80,17 +80,15 @@ function Hero({ headline, sub }) {
   const words = headline.split(' ');
   return (
     <section id="top" className="oh-hero">
-      {/* Background plate — image WITHOUT the figure (figure column dimmed) */}
+      {/* Background video */}
       <div className="oh-hero-image oh-hero-image--bg">
-        <img src="assets/hero-crown.png" alt="" />
+        <video autoPlay loop muted playsInline>
+          <source src="assets/hero-video.mp4" type="video/mp4" />
+        </video>
         <div className="oh-hero-vignette" />
       </div>
       <div className="oh-hero-watermark">
         <S.RitualCircle size={1100} stroke={0.4} color="#5a1010" />
-      </div>
-      {/* Figure cutout — same image, masked to only show the central subject, sits ABOVE the headline */}
-      <div className="oh-hero-image oh-hero-image--figure" aria-hidden="true">
-        <img src="assets/hero-crown.png" alt="" />
       </div>
       <div className="oh-hero-grid">
         <div className="oh-hero-meta-l">
